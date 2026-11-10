@@ -1,0 +1,29 @@
+# Works as a Dokploy "Compose" service. Set the variables under Environment in
+# Dokploy, and add a domain that points at port 3000 of the "mcp" service.
+services:
+  mcp:
+    build: .
+    restart: unless-stopped
+    environment:
+      SB1_CLIENT_ID: ${SB1_CLIENT_ID:?}
+      SB1_CLIENT_SECRET: ${SB1_CLIENT_SECRET:?}
+      SB1_FIN_INST: ${SB1_FIN_INST:-}
+      SB1_ENABLE_TRANSFERS: ${SB1_ENABLE_TRANSFERS:-false}
+      PUBLIC_URL: ${PUBLIC_URL:?}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?}
+      MCP_STATIC_TOKEN: ${MCP_STATIC_TOKEN:-}
+    expose:
+      - "3000"
+    volumes:
+      - data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  data:
